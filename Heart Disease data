@@ -1,0 +1,152 @@
+
+import pandas as pd
+heart_df = pd.read_csv('/Users/geethuiyer/Desktop/Heart.csv')
+heart_df.info()
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 200 entries, 0 to 199
+Data columns (total 8 columns):
+AGE                200 non-null int64
+SEX                200 non-null object
+DIABETES           200 non-null int64
+HYPERTN            200 non-null int64
+LDL                200 non-null int64
+HDL                200 non-null int64
+PrimaryResponse    200 non-null int64
+Drug               200 non-null object
+dtypes: int64(6), object(2)
+memory usage: 12.6+ KB
+
+heart_df.head(10)
+
+AGE	SEX	DIABETES	HYPERTN	LDL	HDL	PrimaryResponse	Drug
+0	48	M	0	0	190	35	0	T
+1	36	M	0	0	145	32	0	T
+2	52	M	0	0	183	50	0	T
+3	57	M	0	0	154	30	1	T
+4	35	M	0	0	206	38	0	T
+5	34	M	0	0	102	47	0	T
+6	48	M	0	0	129	32	0	T
+7	68	M	0	1	208	39	0	T
+8	47	M	0	1	145	26	1	T
+9	58	F	1	1	128	31	0	T
+
+heart_df.mean()
+
+AGE                 54.865
+DIABETES             0.395
+HYPERTN              0.460
+LDL                146.405
+HDL                 39.315
+PrimaryResponse      0.515
+dtype: float64
+
+heart_df.corr()
+
+AGE	DIABETES	HYPERTN	LDL	HDL	PrimaryResponse
+AGE	1.000000	0.208584	0.213886	-0.134875	-0.023540	0.061496
+DIABETES	0.208584	1.000000	0.075110	0.000002	0.011156	-0.082250
+HYPERTN	0.213886	0.075110	1.000000	-0.085333	0.001375	0.136516
+LDL	-0.134875	0.000002	-0.085333	1.000000	0.041891	0.034336
+HDL	-0.023540	0.011156	0.001375	0.041891	1.000000	0.046157
+PrimaryResponse	0.061496	-0.082250	0.136516	0.034336	0.046157	1.000000
+
+
+import seaborn as sn
+
+cols = ['AGE','LDL','HDL','DIABETES']
+
+sn.heatmap(heart_df[cols].corr(),annot= True,cmap = sn.diverging_palette(100,300))
+
+<matplotlib.axes._subplots.AxesSubplot at 0x1a20e60080>
+
+import matplotlib.pyplot as plt
+
+plt.scatter(heart_df.AGE,heart_df.LDL)
+
+<matplotlib.collections.PathCollection at 0x1a2188f668>
+
+plt.scatter(heart_df.AGE,heart_df.HDL)
+<matplotlib.collections.PathCollection at 0x1a219806a0>
+
+cols = ['AGE','LDL','HDL']
+
+sn.pairplot(heart_df[cols])
+
+<seaborn.axisgrid.PairGrid at 0x1a219a0668>
+
+heart_df.std()
+AGE                11.634154
+DIABETES            0.490077
+HYPERTN             0.499648
+LDL                26.077599
+HDL                 7.458817
+PrimaryResponse     0.708722
+
+dtype: float64
+
+Kurtisis
+
+from scipy.stats import kurtosis
+heart_df.kurtosis(axis=0,skipna=True)
+AGE               -0.387200
+DIABETES          -1.831069
+HYPERTN           -1.993884
+LDL               -0.972808
+HDL                1.052101
+PrimaryResponse    1.142078
+dtype: float64
+
+skewness
+
+heart_df.skew(axis = 0, skipna = True)
+AGE                0.001774
+DIABETES           0.432832
+HYPERTN            0.161730
+LDL                0.117011
+HDL                0.672333
+PrimaryResponse    1.272622
+dtype: float64
+
+Get the summary Statistics
+
+heart_df.describe()
+
+AGE	DIABETES	HYPERTN	LDL	HDL	PrimaryResponse
+count	200.000000	200.000000	200.000000	200.000000	200.000000	200.000000
+mean	54.865000	0.395000	0.460000	146.405000	39.315000	0.515000
+std	11.634154	0.490077	0.499648	26.077599	7.458817	0.708722
+min	23.000000	0.000000	0.000000	101.000000	25.000000	0.000000
+25%	47.000000	0.000000	0.000000	127.000000	33.750000	0.000000
+50%	54.500000	0.000000	0.000000	145.000000	39.000000	0.000000
+75%	64.250000	1.000000	1.000000	168.000000	44.000000	1.000000
+max	84.000000	1.000000	1.000000	208.000000	67.000000	3.000000
+
+Data Types
+
+heart_df.dtypes
+
+
+AGE                 int64
+SEX                object
+DIABETES            int64
+HYPERTN             int64
+LDL                 int64
+HDL                 int64
+PrimaryResponse     int64
+Drug               object
+dtype: object
+
+To get the Contigency Table
+
+heart_df_crosstab = pd.crosstab(heart_df['SEX'], 
+                            heart_df['DIABETES'],  
+                               margins = False) 
+​
+​
+print(heart_df_crosstab) 
+
+DIABETES    0   1
+SEX              
+F          12  20
+M         109  59
